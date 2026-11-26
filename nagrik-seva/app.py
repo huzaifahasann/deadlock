@@ -182,7 +182,7 @@ def get_all_complaints():
     cursor.execute("SELECT * FROM complaints ORDER BY filing_date DESC")
     rows = cursor.fetchall()
     conn.close()
-    return rows
+    return [dict(row) for row in rows]
 
 
 def get_complaint_by_id(complaint_id):
@@ -193,7 +193,7 @@ def get_complaint_by_id(complaint_id):
     cursor.execute("SELECT * FROM complaints WHERE id = ?", (complaint_id,))
     row = cursor.fetchone()
     conn.close()
-    return row
+    return dict(row) if row else None
 
 
 def add_complaint(citizen_name, citizen_phone, citizen_email, category,
@@ -659,7 +659,7 @@ def view_complaints_page():
                 {"date": complaint['filing_date'], "event": "Complaint Submitted", "status": "Submitted"},
             ]
             if complaint['status'] != "Submitted":
-                timeline_events.append({"date": complaint.get('updated_at', complaint['filing_date'])[:10] if complaint['updated_at'] else complaint['filing_date'],
+                timeline_events.append({"date": complaint.get('updated_at', complaint['filing_date'])[:10] if complaint.get('updated_at') else complaint['filing_date'],
                                        "event": f"Status: {complaint['status']}", "status": complaint['status']})
 
             for i, event in enumerate(timeline_events):
@@ -803,5 +803,3 @@ def about_page():
 
 if __name__ == "__main__":
     main()
-
-
