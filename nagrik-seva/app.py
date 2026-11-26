@@ -659,7 +659,7 @@ def view_complaints_page():
                 {"date": complaint['filing_date'], "event": "Complaint Submitted", "status": "Submitted"},
             ]
             if complaint['status'] != "Submitted":
-                timeline_events.append({"date": complaint.get('updated_at', complaint['filing_date'])[:10] if complaint.get('updated_at') else complaint['filing_date'],
+                timeline_events.append({"date": complaint.get('updated_at', complaint['filing_date'])[:10] if complaint['updated_at'] else complaint['filing_date'],
                                        "event": f"Status: {complaint['status']}", "status": complaint['status']})
 
             for i, event in enumerate(timeline_events):
